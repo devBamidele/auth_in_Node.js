@@ -12,12 +12,12 @@ router.post(`/`, validateExistingUser, async (req: Request, res: Response) => {
 
         const result = await authenticateUser(email, password);
 
-        const reply = _.pick(result, ['message']);
+        const { message, token } = result;
 
         if (result.success) {
-            res.send(reply);
+            res.header('x-auth-token', token).send(message);
         } else {
-            res.status(400).send(reply);
+            res.status(400).send(message);
         }
 
     } catch (e) {

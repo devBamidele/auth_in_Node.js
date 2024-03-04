@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import Joi, { ValidationResult } from 'joi';
 
-const nameSchema = Joi.string().min(3).max(20).required().messages({
+const nameSchema = Joi.string().min(5).max(50).required().messages({
     'string.base': `Name should be a string`,
     'string.empty': `Name cannot be empty`,
     'string.min': `Name should have a minimum length of {#limit}`,
@@ -10,7 +10,7 @@ const nameSchema = Joi.string().min(3).max(20).required().messages({
     'any.required': `Name is a required field`,
 });
 
-const emailSchema = Joi.string().email().required().messages({
+const emailSchema = Joi.string().min(5).max(255).email().required().messages({
     'string.base': `Email should be a string`,
     'string.email': `Invalid email format`,
     'any.required': `Email is a required field`,

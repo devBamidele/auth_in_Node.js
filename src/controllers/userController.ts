@@ -22,9 +22,13 @@ export const authenticateUser = async (email: string, password: string) : Promis
             const passwordMatch = await bcrypt.compare(password, user.password);
 
             if (passwordMatch) {
+
+                const token = user.generateAuthToken();
+
                 return {
                     success: true,
                     message: 'Authentication successful',
+                    token: token,
                 };
             } else {
                 return {
@@ -40,7 +44,6 @@ export const authenticateUser = async (email: string, password: string) : Promis
             };
         }
 
-        
     }catch(e){
         // Handle other errors
         console.error('Error during authentication:', e);
@@ -60,26 +63,29 @@ export const addNewUser = async (name: string, email: string, password: string):
             password: password,
         });
 
-        user.password = await bcrypt.hash(password, 10);
+        const salt = await bcrypt.genSalt();
+
+        user.password = await bcrypt.hash(password, salt);
 
         await user.save();
 
-        console.log('Saved successfully');
-
         const data =  _.pick(user, ['_id' ,'name', 'email']);
+
+        const token = user.generateAuthToken();
 
         return {
             success: true,
             message: 'User created successfully',
             data: data,
+            token: token
         };
     } catch (e: any) {
-        // console.error('Error creating a new user', e);
+        //console.error('Error creating a new user', e);
 
         if (e.code === 11000 || e.code === 11001) {
             return {
                 success: false,
-                message: 'Invalid Email or Password',
+                message: 'User already registered',
                 data : null,
             };
         }

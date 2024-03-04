@@ -12,10 +12,10 @@ router.post(`/add`, validateNewUser, async (req: Request, res: Response) => {
 
         const result = await addNewUser(name, email, password);
 
-        const successReply = _.pick(result, ['message', 'data']);
+        const { message, data, token } = result;        
 
         if (result.success) {
-            res.send(successReply);
+            res.header('x-auth-token', token).send({data, message});
         } else {
             res.status(400).send(result.message);
         }

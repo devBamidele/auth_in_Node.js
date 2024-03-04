@@ -1,8 +1,10 @@
 import express from 'express';
 import userRoute from './src/routes/userRoute';
-import auth from './src/routes/auth';
+import auth from './src/routes/authRoute';
 import { closeDbConnection, openDbConnection } from './src/utils/db';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
 
 const app = express();
 const port = 3000;
@@ -11,6 +13,7 @@ app.use(express.json());
 
 app.use('/api/users', userRoute);
 app.use('/api/auth', auth);
+
 
 // Open the database connection before starting the server
 (async () => {
