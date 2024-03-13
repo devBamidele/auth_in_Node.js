@@ -2,8 +2,20 @@ import express, { Request, Response, response } from 'express';
 import { addNewUser } from '../controllers/userController';
 import { validateNewUser } from '../middleware/validation';
 import _ from 'lodash';
+import { auth } from '../middleware/auth';
+import { AuthenticatedRequest } from '../models/authenticatedRequest';
+import UserModel from '../models/user';
+import { admin } from '../middleware/admin';
 
 const router = express.Router();
+
+router.get(`/me`, [auth, admin], async (req: AuthenticatedRequest, res: Response) => {
+   
+   const user = await UserModel.findById(req.user._id).select('-password');
+
+   res.send(user);
+
+})
 
 router.post(`/add`, validateNewUser, async (req: Request, res: Response) => {
 

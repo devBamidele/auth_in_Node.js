@@ -2,9 +2,6 @@ import express from 'express';
 import userRoute from './src/routes/userRoute';
 import auth from './src/routes/authRoute';
 import { closeDbConnection, openDbConnection } from './src/utils/db';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 const app = express();
 const port = 3000;
